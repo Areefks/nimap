@@ -1,11 +1,13 @@
 const express = require("express");
 require("dotenv").config();
 const app = express();
+const cors = require("cors");
 
 //custom error middleware for easy front end
 const productionError = require("./middlewares/productionError");
 
 //regular middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

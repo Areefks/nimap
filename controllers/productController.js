@@ -12,6 +12,43 @@ exports.addProduct = BigPromise(async (req, res, next) => {
   });
 });
 
+exports.deleteProduct = BigPromise(async (req, res, next) => {
+  let delProduct = await Product.findByIdAndDelete(req.params.id);
+  if (!delProduct) {
+    next(new CustomError("No Product found", 400));
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+  });
+});
+
+exports.editProduct = BigPromise(async (req, res, next) => {
+  const { _id } = req.body;
+
+  // const product = await Product.findOne(req.query.id);
+  const newProduct = await Product.findByIdAndUpdate(
+    { _id },
+    {
+      name: req.body.name,
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!newProduct) {
+    next(new CustomError("No Product found", 400));
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    newProduct: newProduct,
+  });
+});
+
 exports.getAllProduct = BigPromise(async (req, res, next) => {
   const resultPerPage = req.query.perPage || 3;
   const totalcountProduct = await Product.countDocuments();
